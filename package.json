@@ -1,0 +1,12 @@
+{
+  "name": "chatgpt-cute",
+  "version": "1.0.0",
+  "description": "ChatGPT Cute Get Key",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
