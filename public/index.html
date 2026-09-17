@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChatGPT Cute - Get Key</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #080808;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      width: min(92%, 500px);
+      padding: 30px 22px;
+      background: #111;
+      border: 1px solid #ff4fa3;
+      border-radius: 25px;
+      box-shadow: 0 0 30px rgba(255, 79, 163, .25);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 45px;
+      margin-bottom: 5px;
+    }
+
+    h1 {
+      margin: 5px 0;
+      color: #ff69b4;
+      font-size: 32px;
+    }
+
+    .subtitle {
+      color: #aaa;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: #191919;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 18px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 12px;
+      background: #ff4fa3;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:active {
+      transform: scale(.98);
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      margin: 10px 0;
+      border-radius: 10px;
+      border: 1px solid #444;
+      background: #080808;
+      color: white;
+      font-size: 15px;
+    }
+
+    .key {
+      margin-top: 15px;
+      padding: 13px;
+      border-radius: 10px;
+      background: #080808;
+      color: #ff69b4;
+      word-break: break-all;
+      display: none;
+    }
+
+    .copy {
+      margin-top: 10px;
+      display: none;
+      background: #333;
+    }
+
+    .status {
+      margin-top: 12px;
+      color: #aaa;
+      min-height: 22px;
+    }
+
+    .guide {
+      color: #aaa;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .pink {
+      color: #ff69b4;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <div class="logo">🐱</div>
+
+    <h1>ChatGPT Cute</h1>
+
+    <div class="subtitle">
+      Cute Get Key System 💗
+    </div>
+
+    <div class="card">
+      <h2>🔑 Get Key</h2>
+
+      <button onclick="getKey()">
+        LẤY KEY
+      </button>
+
+      <div id="keyBox" class="key"></div>
+
+      <button id="copyBtn" class="copy" onclick="copyKey()">
+        📋 COPY KEY
+      </button>
+
+      <div id="status" class="status"></div>
+    </div>
+
+    <div class="card">
+      <h2>✅ Kiểm tra Key</h2>
+
+      <input
+        id="checkInput"
+        type="text"
+        placeholder="Nhập key của bạn..."
+      >
+
+      <button onclick="checkKey()">
+        KIỂM TRA
+      </button>
+
+      <div id="checkStatus" class="status"></div>
+    </div>
+
+    <div class="guide">
+      <span class="pink">♡ ChatGPT Cute</span><br>
+      Key có thời hạn 24 giờ.<br>
+      Đây là hệ thống Get Key của website.
+    </div>
+
+  </div>
+
+<script>
+
+let currentKey = "";
+
+async function getKey() {
+
+  const status = document.getElementById("status");
+  const keyBox = document.getElementById("keyBox");
+  const copyBtn = document.getElementById("copyBtn");
+
+  status.textContent = "⏳ Đang tạo key...";
+
+  try {
+
+    const response = await fetch("/api/get-key", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      status.textContent = "❌ Không thể tạo key.";
+      return;
+    }
+
+    currentKey = data.key;
+
+    keyBox.textContent = currentKey;
+    keyBox.style.display = "block";
+
+    copyBtn.style.display = "block";
+
+    status.textContent = "✨ Tạo key thành công!";
+
+  } catch (error) {
+
+    status.textContent = "❌ Không kết nối được máy chủ.";
+
+  }
+}
+
+
+async function copyKey() {
+
+  if (!currentKey) return;
+
+  try {
+
+    await navigator.clipboard.writeText(currentKey);
+
+    document.getElementById("status").textContent =
+      "📋 Đã copy key!";
+
+  } catch {
+
+    document.getElementById("status").textContent =
+      "❌ Không thể copy.";
+
+  }
+}
+
+
+async function checkKey() {
+
+  const key = document
+    .getElementById("checkInput")
+    .value
+    .trim();
+
+  const status = document.getElementById("checkStatus");
+
+  if (!key) {
+
+    status.textContent = "⚠️ Hãy nhập key.";
+
+    return;
+  }
+
+  status.textContent = "⏳ Đang kiểm tra...";
+
+  try {
+
+    const response = await fetch("/api/check-key", {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        key: key
+      })
+
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+
+      status.textContent =
+        "✅ Key hợp lệ!";
+
+    } else {
+
+      status.textContent =
+        "❌ " + data.message;
+
+    }
+
+  } catch {
+
+    status.textContent =
+      "❌ Không kết nối được máy chủ.";
+
+  }
+}
+
+</script>
+
+</body>
+</html>
